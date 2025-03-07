@@ -1,10 +1,10 @@
 package com.palodavis.ms_event_manager.controller;
 
-import com.palodavis.ms_event_manager.dto.ViaCepResponse;
 import com.palodavis.ms_event_manager.entity.Event;
-import com.palodavis.ms_event_manager.repository.EventRepository;
-import com.palodavis.ms_event_manager.service.ViaCepService;
+import com.palodavis.ms_event_manager.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,32 +13,48 @@ import java.util.List;
 @RequestMapping("/events")
 public class EventController {
 
-    @Autowired
-    private EventRepository eventRepository;
+    private final EventService eventService;
 
     @Autowired
-    private ViaCepService viaCepService;
+    public EventController(EventService eventService) {
+        this.eventService = eventService;
+    }
 
     @PostMapping
-    public Event createEvent(@RequestBody Event event) {
-        ViaCepResponse endereco = viaCepService.consultarCep(event.getCep());
-
-        if (endereco != null) {
-            event.setLogradouro(endereco.getLogradouro());
-            event.setBairro(endereco.getBairro());
-            event.setCidade(endereco.getLocalidade());
-            event.setUf(endereco.getUf());
-        }
-        return eventRepository.save(event);
+    public ResponseEntity<Event> createEvent(@RequestBody Event event) {
+        Event savedEvent = eventService.saveEvent(event);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedEvent);
     }
 
     @GetMapping
-    public List<Event> listEvents() {
-        return eventRepository.findAll();
+    public ResponseEntity<List<Event>> listEvents() {
+        return ResponseEntity.ok(eventService.listAllEvents());
     }
 
     @GetMapping("/{id}")
-    public Event findEventById(@PathVariable String id) {
-        return eventRepository.findById(id).orElse(null);
+    public ResponseEntity<Event> findEventById(@PathVariable String id) {
+        return eventService.findEventById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/sorted")
+    public ResponseEntity<List<Event>> listEventsSortedByEventNameAsc() {
+        return ResponseEntity.ok(eventService.listEventsSortedByName());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Event> updateEvent(@PathVariable String id, @RequestBody Event updatedEvent) {
+        return eventService.updateEvent(id, updatedEvent)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteEvent(@PathVariable String id) {
+        if (eventService.deleteEvent(id)) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 }
