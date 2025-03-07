@@ -1,9 +1,17 @@
 package com.palodavis.ms_event_manager.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "events-manager")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Event {
     @Id
     private String id;
@@ -11,43 +19,8 @@ public class Event {
     private String dateTime;
     private String cep;
 
-    public Event() {}
-
-    public Event(String eventName, String dateTime, String cep) {
-        this.eventName = eventName;
-        this.dateTime = dateTime;
-        this.cep = cep;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getEventName() {
-        return eventName;
-    }
-
-    public void setEventName(String eventName) {
-        this.eventName = eventName;
-    }
-
-    public String getDateTime() {
-        return dateTime;
-    }
-
-    public void setDateTime(String dateTime) {
-        this.dateTime = dateTime;
-    }
-
-    public String getCep() {
-        return cep;
-    }
-
-    public void setCep(String cep) {
-        this.cep = cep;
-    }
+    private String logradouro;
+    private String bairro;
+    private String cidade;
+    private String uf;
 }
