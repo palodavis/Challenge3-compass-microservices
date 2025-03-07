@@ -9,7 +9,7 @@ public class ViaCepService {
 
     private static final String VIACEP_URL = "https://viacep.com.br/ws/%s/json/";
 
-    public ViaCepResponse consultarCep(String cep) {
+    public ViaCepResponse consultCep(String cep) {
         String url = String.format(VIACEP_URL, cep);
         RestTemplate restTemplate = new RestTemplate();
         return restTemplate.getForObject(url, ViaCepResponse.class);

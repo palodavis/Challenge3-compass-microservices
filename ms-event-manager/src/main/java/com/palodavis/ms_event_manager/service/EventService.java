@@ -60,12 +60,12 @@ public class EventService {
         if (event.getCep() == null || event.getCep().trim().isEmpty()) {
             return;
         }
-        ViaCepResponse address = viaCepService.consultarCep(event.getCep());
+        ViaCepResponse address = viaCepService.consultCep(event.getCep());
         if (address != null) {
-            event.setLogradouro(address.getLogradouro());
-            event.setBairro(address.getBairro());
-            event.setCidade(address.getLocalidade());
-            event.setUf(address.getUf());
+            event.setStreet(address.getLogradouro());
+            event.setNeighborhood(address.getBairro());
+            event.setCity(address.getLocalidade());
+            event.setState(address.getUf());
         }
     }
 }
