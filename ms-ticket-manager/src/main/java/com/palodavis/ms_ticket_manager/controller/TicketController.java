@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/tickets")
@@ -28,14 +29,14 @@ public class TicketController {
 
     @GetMapping
     public ResponseEntity<List<Ticket>> listTickets() {
-        return ResponseEntity.ok(ticketService.listAllTickets());
+        List<Ticket> tickets = ticketService.listAllTickets();
+        return ResponseEntity.ok(tickets);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Ticket> findTicketById(@PathVariable String id) {
-        return ticketService.findTicketById(id)
-                .map(ResponseEntity::ok)
+        Optional<Ticket> ticket = ticketService.findTicketById(id);
+        return ticket.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-
 }
