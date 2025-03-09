@@ -47,4 +47,36 @@ public class TicketService {
     public Optional<Ticket> findTicketById(String id) {
         return ticketRepository.findById(id);
     }
+
+    public Ticket updateTicket(String id, Ticket ticket) {
+        return ticketRepository.findById(id)
+                .map(existingTicket -> {
+                    if (ticket.getCustomerName() != null) {
+                        existingTicket.setCustomerName(ticket.getCustomerName());
+                    }
+                    if (ticket.getCustomerMail() != null) {
+                        existingTicket.setCustomerMail(ticket.getCustomerMail());
+                    }
+                    if (ticket.getEvent() != null && ticket.getEvent().getEventId() != null) {
+                        Event event = eventClient.getEventById(ticket.getEvent().getEventId());
+                        if (event == null) {
+                            throw new IllegalArgumentException("Evento não encontrado para o ID: " + ticket.getEvent().getEventId());
+                        }
+                        EventDTO eventDTO = EventMapper.toDTO(event);
+                        existingTicket.setEvent(eventDTO);
+                    }
+                    if (ticket.getBRLtotalAmount() != null) {
+                        existingTicket.setBRLtotalAmount(ticket.getBRLtotalAmount());
+                    }
+                    if (ticket.getUSDtotalAmount() != null) {
+                        existingTicket.setUSDtotalAmount(ticket.getUSDtotalAmount());
+                    }
+                    return ticketRepository.save(existingTicket);
+                })
+                .orElseThrow(() -> new IllegalArgumentException("Ticket não encontrado para o ID: " + id));
+    }
+
+    public void deleteTicket(String id) {
+        ticketRepository.deleteById(id);
+    }
 }

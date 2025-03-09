@@ -39,4 +39,16 @@ public class TicketController {
         return ticket.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Ticket> updateTicket(@PathVariable String id, @RequestBody Ticket ticket) {
+        Ticket updatedTicket = ticketService.updateTicket(id, ticket);
+        return ResponseEntity.ok(updatedTicket);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTicket(@PathVariable String id) {
+        ticketService.deleteTicket(id);
+        return ResponseEntity.noContent().build();
+    }
 }
