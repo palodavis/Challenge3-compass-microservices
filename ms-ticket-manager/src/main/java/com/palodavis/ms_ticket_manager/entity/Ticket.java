@@ -1,12 +1,15 @@
 package com.palodavis.ms_ticket_manager.entity;
 
 import com.palodavis.ms_ticket_manager.dto.EventDTO;
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.time.LocalDateTime;
 
 @Document(collection = "tickets")
 @Getter
@@ -23,4 +26,7 @@ public class Ticket {
     private String BRLtotalAmount;
     private String USDtotalAmount;
     private String status;
+
+    @Column(nullable = true)
+    private LocalDateTime deletedAt;
 }

@@ -9,6 +9,7 @@ import com.palodavis.ms_ticket_manager.entity.Event;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -44,8 +45,12 @@ public class TicketService {
         return ticketRepository.findAll();
     }
 
-    public Optional<Ticket> findTicketById(String id) {
-        return ticketRepository.findById(id);
+    public List<Ticket> findTicketById(String id) {
+        return ticketRepository.findActiveTicketsByCpf(id);
+    }
+
+    public List<Ticket> findTicketsByCpf(String cpf) {
+        return ticketRepository.findActiveTicketsByCpf(cpf);
     }
 
     public Ticket updateTicket(String id, Ticket ticket) {
@@ -76,7 +81,20 @@ public class TicketService {
                 .orElseThrow(() -> new IllegalArgumentException("Ticket não encontrado para o ID: " + id));
     }
 
-    public void deleteTicket(String id) {
-        ticketRepository.deleteById(id);
+    public void cancelTicketById(String id) {
+        ticketRepository.findById(id).ifPresent(ticket -> {
+            ticket.setStatus("cancelado");
+            ticket.setDeletedAt(LocalDateTime.now());
+            ticketRepository.save(ticket);
+        });
+    }
+
+    public void cancelTicketsByCpf(String cpf) {
+        List<Ticket> tickets = ticketRepository.findByCpf(cpf);
+        tickets.forEach(ticket -> {
+            ticket.setStatus("cancelado");
+            ticket.setDeletedAt(LocalDateTime.now());
+            ticketRepository.save(ticket);
+        });
     }
 }

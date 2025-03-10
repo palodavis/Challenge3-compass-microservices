@@ -33,11 +33,16 @@ public class TicketController {
         return ResponseEntity.ok(tickets);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Ticket> findTicketById(@PathVariable String id) {
-        Optional<Ticket> ticket = ticketService.findTicketById(id);
-        return ticket.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    @GetMapping("/ticket-id/{id}")
+    public ResponseEntity<List<Ticket>> findTicketById(@PathVariable String id) {
+        List<Ticket> tickets = ticketService.findTicketById(id);
+        return ResponseEntity.ok(tickets);
+    }
+
+    @GetMapping("/ticket-cpf/{cpf}")
+    public ResponseEntity<List<Ticket>> getTicketsByCpf(@PathVariable String cpf) {
+        List<Ticket> tickets = ticketService.findTicketsByCpf(cpf);
+        return ResponseEntity.ok(tickets);
     }
 
     @PutMapping("/{id}")
@@ -46,9 +51,16 @@ public class TicketController {
         return ResponseEntity.ok(updatedTicket);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTicket(@PathVariable String id) {
-        ticketService.deleteTicket(id);
+    @DeleteMapping("/ticket-id/{id}")
+    public ResponseEntity<Void> cancelTicketById(@PathVariable String id) {
+        ticketService.cancelTicketById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping("/ticket-cpf/{cpf}")
+    public ResponseEntity<Void> cancelTicketsByCpf(@PathVariable String cpf) {
+        ticketService.cancelTicketsByCpf(cpf);
+        return ResponseEntity.noContent().build();
+    }
+
 }
