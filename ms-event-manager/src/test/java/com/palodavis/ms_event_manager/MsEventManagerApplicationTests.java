@@ -9,5 +9,4 @@ class MsEventManagerApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }
