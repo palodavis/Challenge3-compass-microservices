@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -46,7 +45,7 @@ public class TicketService {
     }
 
     public List<Ticket> findTicketById(String id) {
-        return ticketRepository.findActiveTicketsByCpf(id);
+        return ticketRepository.findActiveTicketsByEventId(id);
     }
 
     public List<Ticket> findTicketsByCpf(String cpf) {

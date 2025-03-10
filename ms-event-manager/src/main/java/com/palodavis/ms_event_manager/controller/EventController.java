@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -50,11 +51,14 @@ public class EventController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete-event/{id}")
     public ResponseEntity<Void> deleteEvent(@PathVariable String id) {
-        if (eventService.deleteEvent(id)) {
+        try {
+            eventService.deleteEvent(id);
             return ResponseEntity.noContent().build();
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode()).build();
         }
-        return ResponseEntity.notFound().build();
     }
+
 }
