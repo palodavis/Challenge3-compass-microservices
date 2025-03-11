@@ -2,10 +2,12 @@ package com.palodavis.ms_ticket_manager.service;
 
 import com.palodavis.ms_ticket_manager.client.EventClient;
 import com.palodavis.ms_ticket_manager.dto.EventDTO;
+import com.palodavis.ms_ticket_manager.entity.Event;
 import com.palodavis.ms_ticket_manager.entity.Ticket;
+import com.palodavis.ms_ticket_manager.exceptions.InvalidDataException;
+import com.palodavis.ms_ticket_manager.exceptions.NotFoundException;
 import com.palodavis.ms_ticket_manager.mapper.EventMapper;
 import com.palodavis.ms_ticket_manager.repository.TicketRepository;
-import com.palodavis.ms_ticket_manager.entity.Event;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,11 +29,11 @@ public class TicketService {
 
     public Ticket createTicket(Ticket ticket) {
         if (ticket.getEvent() == null || ticket.getEvent().getEventId() == null) {
-            throw new IllegalArgumentException("O campo 'event' com 'eventId' é obrigatório.");
+            throw new InvalidDataException("O campo 'event' com 'eventId' é obrigatório.");
         }
         Event event = eventClient.getEventById(ticket.getEvent().getEventId());
         if (event == null) {
-            throw new IllegalArgumentException("Evento não encontrado para o ID: " + ticket.getEvent().getEventId());
+            throw new NotFoundException("Evento não encontrado para o ID: " + ticket.getEvent().getEventId());
         }
         EventDTO eventDTO = EventMapper.toDTO(event);
         ticket.setEvent(eventDTO);
@@ -45,15 +47,27 @@ public class TicketService {
     }
 
     public List<Ticket> findTicketById(String id) {
-        return ticketRepository.findActiveTicketsByEventId(id);
+        List<Ticket> tickets = ticketRepository.findActiveTicketsByEventId(id);
+        if (tickets.isEmpty()) {
+            throw new NotFoundException("Nenhum ticket encontrado para o ID do evento: " + id);
+        }
+        return tickets;
     }
 
     public List<Ticket> findIdTicket(String id) {
-        return ticketRepository.findActiveTicketsByTicketId(id);
+        List<Ticket> tickets = ticketRepository.findActiveTicketsByTicketId(id);
+        if (tickets.isEmpty()) {
+            throw new NotFoundException("Nenhum ticket encontrado para o ID: " + id);
+        }
+        return tickets;
     }
 
     public List<Ticket> findTicketsByCpf(String cpf) {
-        return ticketRepository.findActiveTicketsByCpf(cpf);
+        List<Ticket> tickets = ticketRepository.findActiveTicketsByCpf(cpf);
+        if (tickets.isEmpty()) {
+            throw new NotFoundException("Nenhum ticket encontrado para o CPF: " + cpf);
+        }
+        return tickets;
     }
 
     public Ticket updateTicket(String id, Ticket ticket) {
@@ -68,7 +82,7 @@ public class TicketService {
                     if (ticket.getEvent() != null && ticket.getEvent().getEventId() != null) {
                         Event event = eventClient.getEventById(ticket.getEvent().getEventId());
                         if (event == null) {
-                            throw new IllegalArgumentException("Evento não encontrado para o ID: " + ticket.getEvent().getEventId());
+                            throw new NotFoundException("Evento não encontrado para o ID: " + ticket.getEvent().getEventId());
                         }
                         EventDTO eventDTO = EventMapper.toDTO(event);
                         existingTicket.setEvent(eventDTO);
@@ -81,19 +95,22 @@ public class TicketService {
                     }
                     return ticketRepository.save(existingTicket);
                 })
-                .orElseThrow(() -> new IllegalArgumentException("Ticket não encontrado para o ID: " + id));
+                .orElseThrow(() -> new NotFoundException("Ticket não encontrado para o ID: " + id));
     }
 
     public void cancelTicketById(String id) {
-        ticketRepository.findById(id).ifPresent(ticket -> {
-            ticket.setStatus("cancelado");
-            ticket.setDeletedAt(LocalDateTime.now());
-            ticketRepository.save(ticket);
-        });
+        Ticket ticket = ticketRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Ticket não encontrado para o ID: " + id));
+        ticket.setStatus("cancelado");
+        ticket.setDeletedAt(LocalDateTime.now());
+        ticketRepository.save(ticket);
     }
 
     public void cancelTicketsByCpf(String cpf) {
         List<Ticket> tickets = ticketRepository.findByCpf(cpf);
+        if (tickets.isEmpty()) {
+            throw new NotFoundException("Nenhum ticket encontrado para o CPF: " + cpf);
+        }
         tickets.forEach(ticket -> {
             ticket.setStatus("cancelado");
             ticket.setDeletedAt(LocalDateTime.now());
