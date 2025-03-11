@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +36,7 @@ public class TicketController {
                     content = @Content(schema = @Schema(implementation = Ticket.class))),
             @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos")
     })
-    public ResponseEntity<Ticket> createTicket(@RequestBody Ticket ticket) {
+    public ResponseEntity<Ticket> createTicket(@Valid @RequestBody Ticket ticket) {
         Ticket savedTicket = ticketService.createTicket(ticket);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedTicket);
     }
@@ -87,7 +88,7 @@ public class TicketController {
     public ResponseEntity<Ticket> updateTicket(
             @Parameter(description = "ID do ingresso a ser atualizado", required = true)
             @PathVariable String id,
-            @RequestBody Ticket ticket) {
+            @Valid @RequestBody Ticket ticket) {
         Ticket updatedTicket = ticketService.updateTicket(id, ticket);
         return ResponseEntity.ok(updatedTicket);
     }

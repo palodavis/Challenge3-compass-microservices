@@ -1,5 +1,7 @@
 package com.palodavis.ms_ticket_manager.service;
 
+import br.com.caelum.stella.validation.CPFValidator;
+import br.com.caelum.stella.validation.InvalidStateException;
 import com.palodavis.ms_ticket_manager.client.EventClient;
 import com.palodavis.ms_ticket_manager.dto.EventDTO;
 import com.palodavis.ms_ticket_manager.entity.Event;
@@ -27,7 +29,12 @@ public class TicketService {
         this.eventClient = eventClient;
     }
 
+
     public Ticket createTicket(Ticket ticket) {
+        String cpfUnformatted = ticket.getCpf().replace(".", "").replace("-", "");
+        if (!isCpfValid(cpfUnformatted)) {
+            throw new InvalidDataException("CPF inválido: " + ticket.getCpf());
+        }
         if (ticket.getEvent() == null || ticket.getEvent().getEventId() == null) {
             throw new InvalidDataException("O campo 'event' com 'eventId' é obrigatório.");
         }
@@ -73,6 +80,13 @@ public class TicketService {
     public Ticket updateTicket(String id, Ticket ticket) {
         return ticketRepository.findById(id)
                 .map(existingTicket -> {
+                    if (ticket.getEvent() == null || ticket.getEvent().getEventId() == null) {
+                        throw new InvalidDataException("O campo 'event' com 'eventId' é obrigatório.");
+                    }
+                    Event event = eventClient.getEventById(ticket.getEvent().getEventId());
+                    if (event == null) {
+                        throw new NotFoundException("Evento não encontrado para o ID: " + ticket.getEvent().getEventId());
+                    }
                     if (ticket.getCustomerName() != null) {
                         existingTicket.setCustomerName(ticket.getCustomerName());
                     }
@@ -80,7 +94,7 @@ public class TicketService {
                         existingTicket.setCustomerMail(ticket.getCustomerMail());
                     }
                     if (ticket.getEvent() != null && ticket.getEvent().getEventId() != null) {
-                        Event event = eventClient.getEventById(ticket.getEvent().getEventId());
+                        eventClient.getEventById(ticket.getEvent().getEventId());
                         if (event == null) {
                             throw new NotFoundException("Evento não encontrado para o ID: " + ticket.getEvent().getEventId());
                         }
@@ -116,5 +130,15 @@ public class TicketService {
             ticket.setDeletedAt(LocalDateTime.now());
             ticketRepository.save(ticket);
         });
+    }
+
+    private boolean isCpfValid(String cpf) {
+        CPFValidator validator = new CPFValidator();
+        try {
+            validator.assertValid(cpf);
+            return true;
+        } catch (InvalidStateException e) {
+            return false;
+        }
     }
 }
