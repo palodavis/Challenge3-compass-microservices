@@ -56,10 +56,10 @@ public class TicketController {
                     content = @Content(schema = @Schema(implementation = Ticket.class))),
             @ApiResponse(responseCode = "404", description = "Ingresso não encontrado")
     })
-    public ResponseEntity<List<Ticket>> findTicketById(
+    public ResponseEntity<List<Ticket>> getTicketById(
             @Parameter(description = "ID do ingresso a ser buscado", required = true)
             @PathVariable String id) {
-        List<Ticket> tickets = ticketService.findTicketById(id);
+        List<Ticket> tickets = ticketService.findIdTicket(id);
         return ResponseEntity.ok(tickets);
     }
 

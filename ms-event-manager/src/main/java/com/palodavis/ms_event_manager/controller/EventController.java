@@ -1,6 +1,7 @@
 package com.palodavis.ms_event_manager.controller;
 
 import com.palodavis.ms_event_manager.entity.Event;
+import com.palodavis.ms_event_manager.exception.NotFoundException;
 import com.palodavis.ms_event_manager.service.EventService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -13,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -61,7 +61,7 @@ public class EventController {
             @PathVariable String id) {
         return eventService.findEventById(id)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new NotFoundException("Evento não encontrado"));
     }
 
     @GetMapping("/sorted")
@@ -85,7 +85,7 @@ public class EventController {
             @RequestBody Event updatedEvent) {
         return eventService.updateEvent(id, updatedEvent)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElseThrow(() -> new NotFoundException("Evento não encontrado"));
     }
 
     @DeleteMapping("/delete-event/{id}")
@@ -98,11 +98,7 @@ public class EventController {
     public ResponseEntity<Void> deleteEvent(
             @Parameter(description = "ID do evento a ser excluído", required = true)
             @PathVariable String id) {
-        try {
-            eventService.deleteEvent(id);
-            return ResponseEntity.noContent().build();
-        } catch (ResponseStatusException e) {
-            return ResponseEntity.status(e.getStatusCode()).build();
-        }
+        eventService.deleteEvent(id);
+        return ResponseEntity.noContent().build();
     }
 }

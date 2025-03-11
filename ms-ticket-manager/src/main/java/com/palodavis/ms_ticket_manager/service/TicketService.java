@@ -48,6 +48,10 @@ public class TicketService {
         return ticketRepository.findActiveTicketsByEventId(id);
     }
 
+    public List<Ticket> findIdTicket(String id) {
+        return ticketRepository.findActiveTicketsByTicketId(id);
+    }
+
     public List<Ticket> findTicketsByCpf(String cpf) {
         return ticketRepository.findActiveTicketsByCpf(cpf);
     }
