@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +37,7 @@ public class EventController {
                     content = @Content(schema = @Schema(implementation = Event.class))),
             @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos")
     })
-    public ResponseEntity<Event> createEvent(@RequestBody Event event) {
+    public ResponseEntity<Event> createEvent(@Valid @RequestBody Event event) {
         Event savedEvent = eventService.saveEvent(event);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedEvent);
     }
@@ -82,7 +83,7 @@ public class EventController {
     public ResponseEntity<Event> updateEvent(
             @Parameter(description = "ID do evento a ser atualizado", required = true)
             @PathVariable String id,
-            @RequestBody Event updatedEvent) {
+            @Valid @RequestBody Event updatedEvent) {
         return eventService.updateEvent(id, updatedEvent)
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> new NotFoundException("Evento não encontrado"));

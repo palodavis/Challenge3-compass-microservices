@@ -11,4 +11,5 @@ public class ViaCepResponse {
     private String bairro;
     private String localidade;
     private String uf;
+    private boolean erro;
 }
