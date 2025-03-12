@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  event-manager:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ms-event-manager
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_APPLICATION_NAME: ms-event-manager
+      SERVER_PORT: 8080git
+      SPRING_DATA_MONGODB_URI: mongodb+srv://admin:admin@cluster0.tjjsu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      SPRING_DATA_MONGODB_DATABASE: db_event
