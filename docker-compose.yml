@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  event-manager:
+    build:
+      context: ./ms-event-manager
+      dockerfile: Dockerfile
+    container_name: ms-event-manager
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_APPLICATION_NAME: ms-event-manager
+      SERVER_PORT: 8080
+      SPRING_DATA_MONGODB_URI: mongodb+srv://admin:admin@cluster0.tjjsu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      SPRING_DATA_MONGODB_DATABASE: db_event
+
+  ticket-manager:
+    build:
+      context: ./ms-ticket-manager
+      dockerfile: Dockerfile
+    container_name: ms-ticket-manager
+    restart: always
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_APPLICATION_NAME: ms-ticket-manager
+      SERVER_PORT: 8081
+      SPRING_DATA_MONGODB_URI: mongodb+srv://admin:admin@cluster0.tjjsu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      SPRING_DATA_MONGODB_DATABASE: db_ticket
+    depends_on:
+      - event-manager
