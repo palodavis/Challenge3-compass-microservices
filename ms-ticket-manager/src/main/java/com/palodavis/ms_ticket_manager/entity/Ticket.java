@@ -30,7 +30,8 @@ public class Ticket {
     private String customerName;
 
     @NotBlank(message = "O e-mail do cliente é obrigatório.")
-    @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "O e-mail do cliente deve ser válido.")
+    @Pattern(regexp = "^[a-zA-Z0-9._%+-]" +
+            "+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "O e-mail do cliente deve ser válido.")
     private String customerMail;
 
     @NotNull(message = "O evento é obrigatório.")
