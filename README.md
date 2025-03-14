@@ -19,7 +19,7 @@ Este projeto é um sistema de gerenciamento de eventos e ingressos, desenvolvido
 Este projeto segue a arquitetura de **microserviços** e é parte de um **sistema distribuído**, onde diferentes componentes do sistema são responsáveis por funcionalidades específicas, comunicando-se entre si para garantir a execução eficiente das tarefas.
 
 - **Microserviço A (Event):** Responsável pelo gerenciamento de eventos, rodando na porta 8080.
-- **Microserviço B (Ticket):** Responsável pela criação e consulta de ingressos, rodando na porta 8081.
+- **Microserviço Bm (Ticket):** Responsável pela criação e consulta de ingressos, rodando na porta 8081.
 - **Comunicação entre Microserviços:** Ambos os microserviços se comunicam de forma **sincronizada**, com dependência mútua para a operação completa do sistema.
 - **Banco de Dados:**
    - O microserviço **Event** utiliza o banco de dados `db_event` no MongoDB Atlas.
@@ -117,7 +117,7 @@ Se estiver rodando na AWS, substitua `localhost` pelo **IP público** da sua ins
 Se estiver rodando na AWS, substitua `localhost` pelo **IP público** da sua instância EC2.
 
 *Exemplo da documentação:*  
-![Swagger - Tickets](ms-event-manager/src/main/java/com/palodavis/ms_event_manager/utils/swagger-events.png)
+![Swagger - Tickets](ms-ticket-manager/src/main/java/com/palodavis/ms_ticket_manager/utils/swagger-tickets.png)
 
 ---
 
@@ -135,14 +135,14 @@ Para configurar e implantar os microsserviços na AWS, deve possuir os seguintes
 - **Importante:** Certifique-se de que sua instância EC2 e todos os recursos foram configurados na região correta, no meu caso utilizei a **us-east-2**. Caso contrário, os serviços podem não funcionar corretamente.
 
 - Caso tenha funcionado a criação da instância, aparecerá na tela como desta forma:
-![Instacia ec2](ec2.png)
+![Instacia ec2](ms-ticket-manager/src/main/java/com/palodavis/ms_ticket_manager/utils/ec2.png)
 ### Conectando-se à EC2
 
 1. Conectar-se à instância via SSH:
    ```bash
    ssh ec2-user@<IP_PUBLICO>
    
-![Exemplo conexão](ssh-ec2.png)
+![Exemplo conexão](ms-ticket-manager/src/main/java/com/palodavis/ms_ticket_manager/utils/ssh-ec2.png)
 
    
 2. **Instalar o Docker na EC2:**
@@ -176,7 +176,7 @@ Para configurar e implantar os microsserviços na AWS, deve possuir os seguintes
    ```
 
 - Esse comando iniciará os contêineres Docker dos microsserviços de eventos e ingressos, garantindo que todas as dependências sejam construídas corretamente.
-![Exemplo deploy](deploy-ec2.png)
+![Exemplo deploy](ms-ticket-manager/src/main/java/com/palodavis/ms_ticket_manager/utils/deploy-ec2.png)
 
 - Caso tenha chegado até nessa parte, pode ser realizados os testes normalmente.
 - Para testar os endpoints, basta substituir  `localhost` pelo **IP público**
