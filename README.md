@@ -80,16 +80,140 @@ Responsável pelo gerenciamento de eventos (CRUD), permitindo a criação, consu
 
 Responsável pelo gerenciamento de ingressos (CRUD), permitindo a criação, consulta, atualização e cancelamento de ingressos.
 
-| Método | Endpoint                                | Descrição                                                                 |
-|--------|-----------------------------------------|---------------------------------------------------------------------------|
-| POST   | `http://<localhost ou IP>:8081/ticket`  | Cria um novo ingresso.                                                   |
-|        |                                         | **Validação**: Verifica a existência do evento no microsserviço `ms-event-manager` antes de criar o ingresso. |
-| GET    | `http://<localhost ou IP>:8081/ticket/ticket-id{id}` | Consulta um ingresso pelo ID.                                            |
-| GET    | `http://<localhost ou IP>:8081/ticket-cpf/{cpf}` | Consulta ingressos associados a um CPF.                                  |
-| PUT    | `http://<localhost ou IP>:8081/{id}`    | Atualiza um ingresso pelo ID.                                            |
-| DELETE | `http://<localhost ou IP>:8081/cancel-ticket/{id}` | Cancela um ingresso pelo ID (soft-delete).                               |
-| DELETE | `http://<localhost ou IP>:8081/cancel-ticket/{cpf}` | Cancela ingressos associados a um CPF (soft-delete).                     |
-| GET    | `http://<localhost ou IP>:8081/check-tickets-by-event/{eventId}` | Verifica se existem ingressos vinculados a um evento específico.       |
+| Método | Endpoint                                                                 | Descrição                                                                 |
+|--------|--------------------------------------------------------------------------|---------------------------------------------------------------------------|
+| POST   | `http://<localhost ou IP>:8081/tickets`                                  | Cria um novo ingresso.                                                   |
+|        |                                                                          | **Validação**: Verifica a existência do evento no microsserviço `ms-event-manager` antes de criar o ingresso. |
+| GET    | `http://<localhost ou IP>:8081/tickets/ticket-id{id}`                    | Consulta um ingresso pelo ID.                                            |
+| GET    | `http://<localhost ou IP>:8081/tickets/ticket-cpf/{cpf}`                 | Consulta ingressos associados a um CPF.                                  |
+| PUT    | `http://<localhost ou IP>:8081/tickets/{id}`                             | Atualiza um ingresso pelo ID.                                            |
+| DELETE | `http://<localhost ou IP>:8081/tickets/cancel-ticket/{id}`               | Cancela um ingresso pelo ID (soft-delete).                               |
+| DELETE | `http://<localhost ou IP>:8081/tickets/cancel-ticket/{cpf}`              | Cancela ingressos associados a um CPF (soft-delete).                     |
+| GET    | `http://<localhost ou IP>:8081/tickets/check-tickets-by-event/{eventId}` | Verifica se existem ingressos vinculados a um evento específico.       |
+
+---
+
+# Requisições de API para Tickets e Events no Postman ou Insomnia
+
+- Requisitos necessários para fazer as requisições:
+
+1. **Abrir o Postman ou Insomnia**
+2. **Selecionar o Método HTTP correto** (`GET`, `POST`, `DELETE` ou `PUT`)
+3. **Inserir a URL correspondente** ao endpoint desejado
+4. **Para requisições `POST` e `PUT`:**
+    - Ir para a aba `Body`
+    - Selecionar `raw` e o formato `JSON`
+    - Inserir o corpo da requisição conforme os exemplos
+5. **Para requisições `GET` e `DELETE`:**
+    - Apenas inserir a URL e executar
+6. **Clicar em "Send"** para enviar a requisição e verificar a resposta
+
+**Observação:** Certifique-se de que a API está rodando no `localhost:8081` ou `localhost:8080` antes de realizar as requisições.
+
+## Endpoints de Tickets
+
+### Buscar Todos os Tickets
+**Método:** `GET`  
+**URL:** ```http://localhost:8081/tickets```
+
+### Buscar Ticket por ID
+**Método:** `GET`  
+**URL:** ```http://localhost:8081/tickets/ticket-id/a0a0155d-3e6a-4430-abaa-9c3152de0e26```
+
+### Buscar Ticket por CPF
+**Método:** `GET`  
+**URL:** ```http://localhost:8081/tickets/ticket-cpf/123.456.789-00```
+
+### Criar um Ticket
+**Método:** `POST`  
+**URL:** ```http://localhost:8081/tickets```
+
+#### Corpo da Requisição (JSON):
+```json
+{
+    "cpf": "123.456.789-12",
+    "customerName": "Teste nome",
+    "customerMail": "testeemail@email.com",
+    "event": {
+        "eventId": "67d302db048d39582e9c6043"
+    },
+    "brltotalAmount": "R$ 60,00",
+    "usdtotalAmount": "R$ 12,00"
+}
+```
+
+### Deletar ticket por ID
+**Método:** `DELETE`  
+**URL:** ```http://localhost:8081/tickets/ticket-id/8aefb058-e950-4df3-8eec-9eac66114ef7```
+
+### Deletar ticket por CPF
+**Método:** `DELETE`  
+**URL:** ```http://localhost:8081/tickets/ticket-cpf/123.456.789-12```
+
+### Atualizar um Ticket por ID
+**Método:** `PUT`  
+**URL:** ```http://localhost:8081/tickets/f252239d-4d54-46be-a995-2f18e54fd155```
+
+#### Corpo da Requisição (JSON):
+```json
+{
+    "customerName": "Paulo dias",
+    "customerMail": "paulo.dias@email.com",
+    "event": {
+        "eventId": "67d07fd45117d144b297a645"
+    },
+    "brltotalAmount": "R$ 200",
+    "usdtotalAmount": "R$ 40"
+}
+```
+
+### Checar Ingressos Vinculados ao Evento
+**Método:** `GET`  
+**URL:** ```http://localhost:8081/tickets/check-tickets-by-event/67d07fd45117d144b297a645```
+
+## Endpoints de Eventos
+
+### Buscar Todos os Eventos
+**Método:** `GET`  
+**URL:** ```http://localhost:8080/events```
+
+### Buscar Evento por ID
+**Método:** `GET`  
+**URL:** ```http://localhost:8080/events/67d07fd45117d144b297a645```
+
+### Buscar Eventos Ordenados
+**Método:** `GET`  
+**URL:** ```http://localhost:8080/events/sorted```
+
+###  Criar um Evento
+**Método:** `POST`  
+**URL:** ```http://localhost:8080/events```
+
+#### Corpo da Requisição (JSON):
+```json
+{
+  "eventName": "curso de java",
+  "dateTime": "2024-10-15T20:30:30",
+  "cep": "123456-000"
+}
+```
+
+### Atualizar um Evento por ID
+**Método:** `PUT`  
+**URL:** ```http://localhost:8080/events/67d07fd45117d144b297a645```
+
+#### Corpo da Requisição (JSON):
+```json
+{
+  "eventName": "Futebol de salão",
+  "dateTime": "2023-10-15T20:00:00",
+  "cep": "123456-000"
+}
+```
+
+### Deletar um Evento
+**Método:** `DELETE`  
+**URL:** ```http://localhost:8080/events/delete-event/67d07fd45117d144b297a645```
 
 ---
 # Documentação da API - Swagger
@@ -147,9 +271,8 @@ Abaixo, estão as localizações dos testes em cada microsserviço:
   </table>
 </div>
 
----
 
-## Cobertura de Testes
+### Cobertura de Testes
 
 Para visualizar a cobertura de testes no **IntelliJ IDEA**, siga os passos abaixo:
 
@@ -226,6 +349,3 @@ Para configurar e implantar os microsserviços na AWS, deve possuir os seguintes
 
 - Caso tenha chegado até nessa parte, pode ser realizados os testes normalmente.
 - Para testar os endpoints, basta substituir  `localhost` pelo **IP público**
-
----
-
