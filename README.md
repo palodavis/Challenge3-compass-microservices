@@ -121,6 +121,52 @@ Se estiver rodando na AWS, substitua `localhost` pelo **IP público** da sua ins
 
 ---
 
+## Testes Automatizados
+
+Os testes foram implementados utilizando **JUnit** e **Mockito** para garantir a confiabilidade e estabilidade do sistema.  
+Todos os testes estão organizados na pasta `tests` de cada microsserviço.
+
+### Estrutura dos Testes
+
+Abaixo, estão as localizações dos testes em cada microsserviço:
+
+<div align="center">
+  <table>
+    <tr>
+      <th>Testes do Event Manager</th>
+      <th>Testes do Ticket Manager</th>
+    </tr>
+    <tr>
+      <td align="center">
+        <img src="ms-event-manager/src/main/java/com/palodavis/ms_event_manager/utils/tests-events.png" width="90%">
+      </td>
+      <td align="center">
+        <img src="ms-ticket-manager/src/main/java/com/palodavis/ms_ticket_manager/utils/tests-tickets.png" width="90%">
+      </td>
+    </tr>
+  </table>
+</div>
+
+---
+
+## Cobertura de Testes
+
+Para visualizar a cobertura de testes no **IntelliJ IDEA**, siga os passos abaixo:
+
+1. Abra a classe de teste desejada.
+2. Execute-a utilizando a opção **Run with Coverage**.
+
+Isso gerará um relatório visual da cobertura de código, conforme ilustrado nas imagens abaixo:
+
+### Cobertura de Testes nos Microsserviços de Tickets
+![Cobertura de Testes Tickets](ms-ticket-manager/src/main/java/com/palodavis/ms_ticket_manager/utils/img.png)
+
+### Cobertura de Testes nos Microsserviços de Events
+![Cobertura de Testes](ms-event-manager/src/main/java/com/palodavis/ms_event_manager/utils/coverage-tests.png)
+
+- Ambos os microsserviços atingiram uma cobertura superior a **80%**, conforme recomendado para o projeto.
+
+---
 ## Deploy na AWS com EC2
 
 ### Requisitos
