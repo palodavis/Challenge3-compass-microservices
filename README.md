@@ -19,7 +19,7 @@ Este projeto é um sistema de gerenciamento de eventos e ingressos, desenvolvido
 Este projeto segue a arquitetura de **microserviços** e é parte de um **sistema distribuído**, onde diferentes componentes do sistema são responsáveis por funcionalidades específicas, comunicando-se entre si para garantir a execução eficiente das tarefas.
 
 - **Microserviço A (Event):** Responsável pelo gerenciamento de eventos, rodando na porta 8080.
-- **Microserviço Bm (Ticket):** Responsável pela criação e consulta de ingressos, rodando na porta 8081.
+- **Microserviço B (Ticket):** Responsável pela gerenciamento de ingressos, rodando na porta 8081.
 - **Comunicação entre Microserviços:** Ambos os microserviços se comunicam de forma **sincronizada**, com dependência mútua para a operação completa do sistema.
 - **Banco de Dados:**
    - O microserviço **Event** utiliza o banco de dados `db_event` no MongoDB Atlas.
@@ -108,7 +108,7 @@ Responsável pelo gerenciamento de ingressos (CRUD), permitindo a criação, con
     - Apenas inserir a URL e executar
 6. **Clicar em "Send"** para enviar a requisição e verificar a resposta
 
-**Observação:** Certifique-se de que a API está rodando no `localhost:8081` ou `localhost:8080` antes de realizar as requisições.
+**Observação:** Certifique-se de que a API está rodando no `localhost:8081` ou `localhost:8080` antes de realizar as requisições, ambas devem rodar sincronizadas.
 
 ## Endpoints de Tickets
 
