@@ -72,13 +72,49 @@ Certifique-se de ter os seguintes requisitos antes de executar o projeto:
    ```bash
    docker-compose up --build
    ```
-
+   
 ---
 
 ## Endpoints disponíveis
 
 - Os endpoints podem ser acessados localmente apenas pelas portas **8080** e **8081**.
 - No deploy na AWS, a URL será diferente e deve ser configurada com o **IP público** da instância EC2.
+
+---
+
+# Documentação da API - Swagger
+Utilizado a documentação da API utilizando **Swagger**, proporcionando uma interface interativa para explorar os endpoints disponíveis. 
+O Swagger facilita a exploração e teste da API diretamente pelo navegador.
+
+### Acessando a Documentação de ambos microsserviços:
+- Microserviço de Events pode ser acessado pelo link:
+- [http://localhost:8080/docs-events.html](http://localhost:8080/docs-events.html)
+
+![Descrição da Imagem](ms-event-manager/src/main/java/com/palodavis/ms_event_manager/utils/swagger-events.png)
+- 
+- Microserviço de Tickets pode ser acessado pelo link:
+- [http://localhost:8080/docs-tickets.html](http://localhost:8080/docs-tickets.html)
+
+![Descrição da Imagem](ms-event-manager/src/main/java/com/palodavis/ms_event_manager/utils/swagger-events.png)
+
+### Endpoints Documentados:
+#### Events:
+- **POST /events** - Criar um novo evento.
+- **GET /events** - Listar todos os eventos.
+- **GET /events/{id}** - Buscar evento por ID.
+- **GET /events/sorted** - Listar eventos ordenados por nome.
+- **PUT /events/{id}** - Atualizar um evento.
+- **DELETE /events/delete-event/{id}** - Excluir um evento.
+
+#### Tickets:
+- **POST /tickets** - Criar um novo ingresso.
+- **GET /tickets** - Listar todos os ingressos.
+- **GET /tickets/ticket-id/{id}** - Buscar ingresso por ID.
+- **GET /tickets/ticket-cpf/{cpf}** - Buscar ingressos por CPF.
+- **PUT /tickets/{id}** - Atualizar um ingresso.
+- **DELETE /tickets/ticket-id/{id}** - Cancelar ingresso por ID.
+- **DELETE /tickets/ticket-cpf/{cpf}** - Cancelar ingressos por CPF.
+- **GET /tickets/check-tickets-by-event/{eventId}** - Buscar ingressos por ID do evento.
 
 ---
 
@@ -127,3 +163,6 @@ Certifique-se de ter os seguintes requisitos antes de executar o projeto:
    ```bash
    sudo docker-compose up --build
    ```
+
+---
+
